@@ -1,4 +1,4 @@
-package com.exercise.nasapictures;
+package com.exercise.nasapictures.Ui;
 
 import android.os.Bundle;
 
@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.exercise.nasapictures.R;
 import com.exercise.nasapictures.databinding.ImageDetailBinding;
 
 
@@ -24,7 +25,7 @@ public class ImageDetail extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        imageDetailBinding= DataBindingUtil.inflate(inflater,R.layout.image_detail,container,false);
+        imageDetailBinding= DataBindingUtil.inflate(inflater, R.layout.image_detail,container,false);
         View v=imageDetailBinding.getRoot();
         return v;
     }
