@@ -6,6 +6,7 @@
     android:layout_margin="10dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <ImageView
+        android:background="@drawable/item_border_list"
         android:id="@+id/nasa_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent">

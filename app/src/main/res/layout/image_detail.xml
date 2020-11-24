@@ -8,7 +8,7 @@
 
         <!-- TODO: Update blank fragment layout -->
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/images_detail"
+            android:id="@+id/image_detail_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 

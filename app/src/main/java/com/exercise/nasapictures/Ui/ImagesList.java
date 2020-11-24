@@ -6,6 +6,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 
@@ -23,6 +25,8 @@ import java.util.List;
 
 public class ImagesList extends Fragment {
 
+    FragmentManager fm;
+    FragmentTransaction ft;
     ImagesListBinding imagesListBinding;
     ImageListViewModel imageListViewModel;
     public ImagesList() {
@@ -48,6 +52,20 @@ public class ImagesList extends Fragment {
         ImageListAdapter adapter=new ImageListAdapter(getActivity(),getList);
         imagesListBinding.imagesList.setAdapter(adapter);
         adapter.notifyDataSetChanged();
+        adapter.onImageClickListener(new ImageListAdapter.onClickImage() {
+            @Override
+            public void onImageClick(int pos) {
+                ImageDetail imageDetail=new ImageDetail();
+                Bundle bundle=new Bundle();
+                bundle.putInt("position",pos);
+                imageDetail.setArguments(bundle);
+                fm=getActivity().getSupportFragmentManager();
+                ft=fm.beginTransaction();
+                ft.replace(R.id.main_activity_frame,imageDetail);
+                ft.addToBackStack("ImagesList");
+                ft.commit();
+            }
+        });
         return v;
     }
 }
