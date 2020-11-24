@@ -22,16 +22,18 @@ import com.exercise.nasapictures.Adapter.ImageListAdapter;
 import com.exercise.nasapictures.Data.PictureData;
 import com.exercise.nasapictures.R;
 import com.exercise.nasapictures.databinding.ImagesListBinding;
+import com.exercise.nasapictures.utils.AlertClass;
 import com.exercise.nasapictures.utils.NetworkStatus;
 
 import java.util.List;
 
 public class ImagesList extends Fragment {
 
-    FragmentManager fm;
-    FragmentTransaction ft;
-    ImagesListBinding imagesListBinding;
-    ImageListViewModel imageListViewModel;
+    private FragmentManager fm;
+    private FragmentTransaction ft;
+    private ImagesListBinding imagesListBinding;
+    private ImageListViewModel imageListViewModel;
+    private AlertClass alertClass;
     public ImagesList() {
         // Required empty public constructor
     }
@@ -49,6 +51,7 @@ public class ImagesList extends Fragment {
         // Inflate the layout for this fragment
         imagesListBinding= DataBindingUtil.inflate(inflater, R.layout.images_list,container,false);
         View v=imagesListBinding.getRoot();
+        alertClass=new AlertClass();
         imagesListBinding.imagesList.setHasFixedSize(true);
         imagesListBinding.imagesList.setLayoutManager(new GridLayoutManager(getActivity(),2));
         if(NetworkStatus.checkConnection(getActivity())){
@@ -71,7 +74,9 @@ public class ImagesList extends Fragment {
                 }
             });
         }else{
-            noInternetAlert();
+            if(getActivity()!=null){
+                alertClass.noInternetAlert(getActivity());
+            }
         }
 
         return v;

@@ -21,6 +21,7 @@ import com.exercise.nasapictures.Adapter.ImageListAdapter;
 import com.exercise.nasapictures.Data.PictureData;
 import com.exercise.nasapictures.R;
 import com.exercise.nasapictures.databinding.ImageDetailBinding;
+import com.exercise.nasapictures.utils.AlertClass;
 import com.exercise.nasapictures.utils.NetworkStatus;
 import com.exercise.nasapictures.utils.RecyclerViewItemSnapHelper;
 
@@ -29,9 +30,10 @@ import java.util.List;
 
 public class ImageDetail extends Fragment {
 
-    ImageDetailBinding imageDetailBinding;
-    ImageDetailViewModel imageDetailViewModel;
-    int position;
+    private ImageDetailBinding imageDetailBinding;
+    private ImageDetailViewModel imageDetailViewModel;
+    private int position;
+    private AlertClass alertClass;
     public ImageDetail() {
         // Required empty public constructor
     }
@@ -48,6 +50,7 @@ public class ImageDetail extends Fragment {
         // Inflate the layout for this fragment
         imageDetailBinding= DataBindingUtil.inflate(inflater, R.layout.image_detail,container,false);
         View v=imageDetailBinding.getRoot();
+        alertClass=new AlertClass();
         if(getArguments()!=null){
             position=getArguments().getInt("position",0);
         }
@@ -62,25 +65,10 @@ public class ImageDetail extends Fragment {
             imageDetailBinding.imageDetailLayout.setAdapter(adapter);
         }else{
            if(getActivity()!=null){
-               noInternetAlert();
+               alertClass.noInternetAlert(getActivity());
            }
         }
 
         return v;
-    }
-
-    private void noInternetAlert() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage("Please check your Internet settings & try again.");
-        builder.setCancelable(false);
-        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if(getActivity()!=null){
-                    getActivity().finish();
-                }
-            }
-        });
-        builder.show();
     }
 }
