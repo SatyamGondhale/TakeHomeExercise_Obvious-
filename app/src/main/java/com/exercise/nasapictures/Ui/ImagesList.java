@@ -1,5 +1,7 @@
 package com.exercise.nasapictures.Ui;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -20,6 +22,7 @@ import com.exercise.nasapictures.Adapter.ImageListAdapter;
 import com.exercise.nasapictures.Data.PictureData;
 import com.exercise.nasapictures.R;
 import com.exercise.nasapictures.databinding.ImagesListBinding;
+import com.exercise.nasapictures.utils.NetworkStatus;
 
 import java.util.List;
 
@@ -48,24 +51,44 @@ public class ImagesList extends Fragment {
         View v=imagesListBinding.getRoot();
         imagesListBinding.imagesList.setHasFixedSize(true);
         imagesListBinding.imagesList.setLayoutManager(new GridLayoutManager(getActivity(),2));
-        List<PictureData> getList=imageListViewModel.getNasaPictureList;
-        ImageListAdapter adapter=new ImageListAdapter(getActivity(),getList);
-        imagesListBinding.imagesList.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
-        adapter.onImageClickListener(new ImageListAdapter.onClickImage() {
+        if(NetworkStatus.checkConnection(getActivity())){
+            List<PictureData> getList=imageListViewModel.getNasaPictureList;
+            ImageListAdapter adapter=new ImageListAdapter(getActivity(),getList);
+            imagesListBinding.imagesList.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
+            adapter.onImageClickListener(new ImageListAdapter.onClickImage() {
+                @Override
+                public void onImageClick(int pos) {
+                    ImageDetail imageDetail=new ImageDetail();
+                    Bundle bundle=new Bundle();
+                    bundle.putInt("position",pos);
+                    imageDetail.setArguments(bundle);
+                    fm=getActivity().getSupportFragmentManager();
+                    ft=fm.beginTransaction();
+                    ft.replace(R.id.main_activity_frame,imageDetail);
+                    ft.addToBackStack("ImagesList");
+                    ft.commit();
+                }
+            });
+        }else{
+            noInternetAlert();
+        }
+
+        return v;
+    }
+
+    private void noInternetAlert() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage("Please check your Internet settings & try again.");
+        builder.setCancelable(false);
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
-            public void onImageClick(int pos) {
-                ImageDetail imageDetail=new ImageDetail();
-                Bundle bundle=new Bundle();
-                bundle.putInt("position",pos);
-                imageDetail.setArguments(bundle);
-                fm=getActivity().getSupportFragmentManager();
-                ft=fm.beginTransaction();
-                ft.replace(R.id.main_activity_frame,imageDetail);
-                ft.addToBackStack("ImagesList");
-                ft.commit();
+            public void onClick(DialogInterface dialog, int which) {
+                if(getActivity()!=null){
+                    getActivity().finish();
+                }
             }
         });
-        return v;
+        builder.show();
     }
 }

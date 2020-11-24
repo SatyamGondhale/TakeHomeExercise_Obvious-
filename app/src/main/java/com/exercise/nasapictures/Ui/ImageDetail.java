@@ -1,5 +1,7 @@
 package com.exercise.nasapictures.Ui;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -19,6 +21,7 @@ import com.exercise.nasapictures.Adapter.ImageListAdapter;
 import com.exercise.nasapictures.Data.PictureData;
 import com.exercise.nasapictures.R;
 import com.exercise.nasapictures.databinding.ImageDetailBinding;
+import com.exercise.nasapictures.utils.NetworkStatus;
 import com.exercise.nasapictures.utils.RecyclerViewItemSnapHelper;
 
 import java.util.List;
@@ -50,12 +53,34 @@ public class ImageDetail extends Fragment {
         }
         imageDetailBinding.imageDetailLayout.setHasFixedSize(true);
         imageDetailBinding.imageDetailLayout.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false));
-        List<PictureData> getList=imageDetailViewModel.getNasaPictureList;
-        ImageDetailAdapter adapter=new ImageDetailAdapter(getActivity(),getList);
-        imageDetailBinding.imageDetailLayout.scrollToPosition(position);
-        LinearSnapHelper linearSnapHelper = new RecyclerViewItemSnapHelper();
-        linearSnapHelper.attachToRecyclerView(imageDetailBinding.imageDetailLayout);
-        imageDetailBinding.imageDetailLayout.setAdapter(adapter);
+        if(NetworkStatus.checkConnection(getActivity())){
+            List<PictureData> getList=imageDetailViewModel.getNasaPictureList;
+            ImageDetailAdapter adapter=new ImageDetailAdapter(getActivity(),getList);
+            imageDetailBinding.imageDetailLayout.scrollToPosition(position);
+            LinearSnapHelper linearSnapHelper = new RecyclerViewItemSnapHelper();
+            linearSnapHelper.attachToRecyclerView(imageDetailBinding.imageDetailLayout);
+            imageDetailBinding.imageDetailLayout.setAdapter(adapter);
+        }else{
+           if(getActivity()!=null){
+               noInternetAlert();
+           }
+        }
+
         return v;
+    }
+
+    private void noInternetAlert() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage("Please check your Internet settings & try again.");
+        builder.setCancelable(false);
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if(getActivity()!=null){
+                    getActivity().finish();
+                }
+            }
+        });
+        builder.show();
     }
 }
