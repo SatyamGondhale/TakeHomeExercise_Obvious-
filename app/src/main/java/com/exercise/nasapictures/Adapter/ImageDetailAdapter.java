@@ -45,8 +45,6 @@ public class ImageDetailAdapter extends RecyclerView.Adapter<ImageDetailAdapter.
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public ImageDetailLayoutBinding imageDetailLayoutBinding;
-        TextView title, date, copyright, description;
-        ImageView image_source;
         public ViewHolder(@NonNull ImageDetailLayoutBinding  itemView) {
             super(itemView.getRoot());
             this.imageDetailLayoutBinding=itemView;
@@ -56,6 +54,15 @@ public class ImageDetailAdapter extends RecyclerView.Adapter<ImageDetailAdapter.
             imageDetailLayoutBinding.imageTitle.setText(entry.getTitle());
             imageDetailLayoutBinding.imageDate.setText(entry.getDate());
             imageDetailLayoutBinding.imageCopyright.setText(entry.getCopyright());
+            if(entry.getCopyright()!=null){
+                if(entry.getCopyright().equals("")){
+                    imageDetailLayoutBinding.copyrightText.setVisibility(View.GONE);
+                    imageDetailLayoutBinding.imageCopyright.setVisibility(View.GONE);
+                }
+            }else{
+                imageDetailLayoutBinding.copyrightText.setVisibility(View.GONE);
+                imageDetailLayoutBinding.imageCopyright.setVisibility(View.GONE);
+            }
             imageDetailLayoutBinding.imageExplanation.setText(entry.getExplanation());
             Picasso.get().load(entry.getUrl()).placeholder(context.getResources().getDrawable(R.drawable.loading)).fit().centerCrop().into(imageDetailLayoutBinding.imageSource);
         }
